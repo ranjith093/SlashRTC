@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
     select: false,
   },
   googleId: String,
+  githubId:String,
  
   createdAt: {
     type: Date,

@@ -14,6 +14,7 @@ const connectDb = require('./config/db')
 
 const morgan = require('morgan')
 require("./services/passport")
+require("./services/passportGithub")
 const app  = express();
 
 dotenv.config({path: './config/config.env'})
