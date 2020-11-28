@@ -23,6 +23,8 @@ connectDb()
 
 app.use(express.json())
 
+app.set('view engine', 'ejs')
+
 app.use(cookieSession({
   maxAge:30*24*60*1000,
   keys: [process.env.COOKIE_KEY]

@@ -21,17 +21,46 @@ passport.use(
     new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback',
-        proxy: true
+        callbackURL: '/api/v1/auth/google/callback'
     }, async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({ googleId: profile.id })
+        console.log("passport callback",profile)
+      let existingUser = await User.findOne({"googleProfile.id": profile.id})
+
             if(existingUser) {
                 // we already have a record with the given profile id.
                return done(null, existingUser);
             }
-            // we dont have a user record with this ID, make a new record.
-            const user = await new User({ googleId: profile.id }).save()
-            done(null, user)
+             existingUser = await User.findOne({email: profile.emails[0].value})
+             console.log("email",profile.emails[0].value)
+             if(existingUser){
+                await User.findByIdAndUpdate(existingUser.id, {
+                    googleProfile: {
+                        id: profile.id,
+                        email: profile.emails[0].value,
+                        name: profile.displayName
+                    }
+                }, {
+                    new: true,
+                    runValidators: true
+                  });
+                  return done(null, existingUser)
+             } else {
+
+                 // we dont have a user record with this ID, make a new record.
+                 const user = await new User({
+                     email: profile.emails[0].value,
+                     password: "cccccccc",
+                     googleProfile: {
+                         id: profile.id,
+                         email: profile.emails[0].value,
+                         name: profile.displayName
+                     }
+                 }).save()
+                 return done(null, user)
+             }
+            // const user = await new User({"googleProfile.id": profile.id}).save()
+
+           
             
         }
     )

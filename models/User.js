@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please add a name'],
+    // required: [true, 'Please add a name'],
   },
   email: {
     type: String,
@@ -22,10 +22,17 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
-  googleId: String,
-  githubId:String,
- 
-  createdAt: {
+  googleProfile:{
+    id: String,
+    email: String,
+    name: String
+  },
+  githubProfile: {
+    id: String,
+    email:String,
+    name: String
+  },
+ createdAt: {
     type: Date,
     default: Date.now,
   },
